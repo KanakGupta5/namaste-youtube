@@ -1,0 +1,120 @@
+[
+    {
+        "heading": null,
+        "headingIcon": null,
+        "options": [
+            {
+                "displayName": "Home",
+                "icon": "images/home.png"
+            },
+            {
+                "displayName": "Shorts",
+                "icon": "images/short.png"
+            }
+        ]
+    },
+    {
+        "heading": "Subscriptions",
+        "headingIcon": "images/multimedia.png",
+        "options": [
+            {
+                "displayName": "Gate Wallah",
+                "icon": "images/school.png"
+            },
+            {
+                "displayName": "Aaj Tak",
+                "icon": "images/news.png"
+            }
+        ]
+    },
+    {
+        "heading": "You",
+        "headingIcon": "images/user.png",
+        "options": [
+            {
+                "displayName": "History",
+                "icon": "images/history.png"
+            },
+            {
+                "displayName": "Playlist",
+                "icon": "images/playlist.png"
+            },
+            {
+                "displayName": "Watch later",
+                "icon": "images/clock.png"
+            },
+            {
+                "displayName": "Liked videos",
+                "icon": "images/like.png"
+            },
+            {
+                "displayName": "Your videos",
+                "icon": "images/videos.png"
+            },
+            {
+                "displayName": "Downloads",
+                "icon": "images/download.png"
+            }
+        ]
+    },
+    {
+        "heading": "Explore",
+        "headingIcon": "images/compass.png",
+        "options": [
+            {
+                "displayName": "Shopping",
+                "icon": "images/shopping.png"
+            },
+            {
+                "displayName": "Music",
+                "icon": "images/musical-note.png"
+            },
+            {
+                "displayName": "Movies & TV",
+                "icon": "images/movies.png"
+            },
+            {
+                "displayName": "Hype",
+                "icon": "images/hype.png"
+            },
+            {
+                "displayName": "Live",
+                "icon": "images/stream.png"
+            },
+            {
+                "displayName": "Gaming",
+                "icon": "images/gaming.png"
+            },
+            {
+                "displayName": "News",
+                "icon": "images/newspaper-folded.png"
+            },
+            {
+                "displayName": "Sports",
+                "icon": "images/sports.png"
+            },
+            {
+                "displayName": "Courses",
+                "icon": "images/courses.png"
+            }
+        ]
+    },
+    {
+        "heading": "More from YouTube",
+        "headingIcon": "images/more-from-youtube.png",
+        "options": [
+            {
+                "displayName": "YouTube Premium",
+                "icon": "images/youtube-premium.png"
+            },
+            {
+                "displayName": "YouTube Music",
+                "icon": "images/youtube-music.png"
+            },
+            {
+                "displayName": "YouTube Kids",
+                "icon": "images/youtube-kids.png"
+            }
+        ]
+    }
+]

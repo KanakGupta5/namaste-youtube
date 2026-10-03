@@ -1,0 +1,46 @@
+**************************************** Episode 1 **************************************** 
+Q. What is reportWebVitals.js
+A.  Web Vitals are performance metrics provided by Google to measure important aspects of the user experience, such as loading performance, responsiveness, and visual stability. The three Core Web Vitals are LCP for loading, INP for responsiveness, and CLS for visual stability.
+    Web Vitals are a set of metrics used to measure the real-world user experience and performance of a web page.
+    These are some metrics
+        1. LCP(Largest Contentful Paint)
+            - How quickly the main content becomes visible
+            - i.e. How quickly the main image/heading appears. A lower LCP generally means the page feels like it loads faster.
+        2. INP(Interaction to Next Paint)
+            - How responsive the page is to user interactions
+            - i.e. How quickly a button responds after clicking
+        3. CLS(Cumulative Layout Shift)
+            - measures layout shift.
+            - i.e. [Buy Now] [Description] -----After image loads------> [Huge Image] [Buy Now] [Description] The button suddenly moved because an image didn't have its dimensions reserved.
+            - CLS measures how much unexpected movement occurs during the page's lifetime.
+        4. FCP
+            - How quickly the first piece of content appears
+            - i.e First text/image appearing
+        5. TTFB
+
+Q. What is <React.StrictMode>?
+A. <React.StrictMode> is a development-only tool(the same behaviour is not expected in production env) in React that helps you find potential problems in your application.
+    React uses this behavior to help detect code that isn't safe when components are mounted/unmounted and mounted again
+    Strict Mode can expose whether your cleanup is implemented correctly.
+    It mounts your component, unmount it and then again mounts it so that a noticable bug can be recognized by developer
+    i.e. useEffect(() => {
+            window.addEventListener("resize", handleResize);
+
+            // Forgot cleanup
+        }, []);
+        then:   compoennt mounted (listener is attached)
+                component unmounted
+                component mounted again (a new listener is attached)
+                hence you have two different event listeners now
+        if the clean up was done :  useEffect(() => {
+                                        window.addEventListener("resize", handleResize);
+
+                                        return  () => {
+                                            window.removeListener("resize", handleResize);
+                                        } 
+                                    }, []);
+
+                compoennt mounted (listener is attached)
+                component unmounted (listener is removed)
+                component mounted again (listener is attached)
+                
