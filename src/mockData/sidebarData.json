@@ -5,11 +5,13 @@
         "options": [
             {
                 "displayName": "Home",
-                "icon": "images/home.png"
+                "icon": "images/home.png",
+                "navigate" : "/"
             },
             {
                 "displayName": "Shorts",
-                "icon": "images/short.png"
+                "icon": "images/short.png",
+                "navigate" : "/shorts"
             }
         ]
     },
@@ -19,11 +21,13 @@
         "options": [
             {
                 "displayName": "Gate Wallah",
-                "icon": "images/school.png"
+                "icon": "images/school.png",
+                "navigate" : "/gate-wallah"
             },
             {
                 "displayName": "Aaj Tak",
-                "icon": "images/news.png"
+                "icon": "images/news.png",
+                "navigate" : "/aaj-tak"
             }
         ]
     },
@@ -33,27 +37,33 @@
         "options": [
             {
                 "displayName": "History",
-                "icon": "images/history.png"
+                "icon": "images/history.png",
+                "navigate" : "/history"
             },
             {
                 "displayName": "Playlist",
-                "icon": "images/playlist.png"
+                "icon": "images/playlist.png",
+                "navigate" : "/playlist"
             },
             {
                 "displayName": "Watch later",
-                "icon": "images/clock.png"
+                "icon": "images/clock.png",
+                "navigate" : "/watch-later"
             },
             {
                 "displayName": "Liked videos",
-                "icon": "images/like.png"
+                "icon": "images/like.png",
+                "navigate" : "/liked-videos"
             },
             {
                 "displayName": "Your videos",
-                "icon": "images/videos.png"
+                "icon": "images/videos.png",
+                "navigate" : "/your-videos"
             },
             {
                 "displayName": "Downloads",
-                "icon": "images/download.png"
+                "icon": "images/download.png",
+                "navigate" : "/downloads"
             }
         ]
     },
@@ -63,39 +73,48 @@
         "options": [
             {
                 "displayName": "Shopping",
-                "icon": "images/shopping.png"
+                "icon": "images/shopping.png",
+                "navigate" : "/shopping"
             },
             {
                 "displayName": "Music",
-                "icon": "images/musical-note.png"
+                "icon": "images/musical-note.png",
+                "navigate" : "/music"
             },
             {
                 "displayName": "Movies & TV",
-                "icon": "images/movies.png"
+                "icon": "images/movies.png",
+                "navigate" : "/movies-tv"
             },
             {
                 "displayName": "Hype",
-                "icon": "images/hype.png"
+                "icon": "images/hype.png",
+                "navigate" : "/hype"
             },
             {
                 "displayName": "Live",
-                "icon": "images/stream.png"
+                "icon": "images/stream.png",
+                "navigate" : "/live-stream"
             },
             {
                 "displayName": "Gaming",
-                "icon": "images/gaming.png"
+                "icon": "images/gaming.png",
+                "navigate" : "/gaming"
             },
             {
                 "displayName": "News",
-                "icon": "images/newspaper-folded.png"
+                "icon": "images/newspaper-folded.png",
+                "navigate" : "/news"
             },
             {
                 "displayName": "Sports",
-                "icon": "images/sports.png"
+                "icon": "images/sports.png",
+                "navigate" : "/sports"
             },
             {
                 "displayName": "Courses",
-                "icon": "images/courses.png"
+                "icon": "images/courses.png",
+                "navigate" : "/courses"
             }
         ]
     },
@@ -105,15 +124,18 @@
         "options": [
             {
                 "displayName": "YouTube Premium",
-                "icon": "images/youtube-premium.png"
+                "icon": "images/youtube-premium.png",
+                "navigate" : "/youtube-premium"
             },
             {
                 "displayName": "YouTube Music",
-                "icon": "images/youtube-music.png"
+                "icon": "images/youtube-music.png",
+                "navigate" : "/youtube-music"
             },
             {
                 "displayName": "YouTube Kids",
-                "icon": "images/youtube-kids.png"
+                "icon": "images/youtube-kids.png",
+                "navigate" : "/youtube-kids"
             }
         ]
     }
