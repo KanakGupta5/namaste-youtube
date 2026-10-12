@@ -76,7 +76,7 @@ const CommentCard = ({ data }) => {
                 {/* Replies button */}
                 {replyCount > 0 ? 
                     (showReplies ? 
-                        replies.map(reply => <CommentCard data={reply}/>)
+                        replies.map(reply => <CommentCard key={reply?.id} data={reply}/>)
                         : (
                         <button onClick={() => setShowReplies(prev => !prev)} className="flex items-center self-start gap-x-1 rounded-lg px-2 py-1 text-sm hover:bg-gray-200">
                             {replyCount} {replyCount === 1 ? "reply" : "replies"}

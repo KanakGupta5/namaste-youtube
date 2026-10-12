@@ -3,11 +3,9 @@ import CommentCard from "./CommentCard";
 const Comment = ({data}) => {
     
     return <>
-    {data.map(comment => <>
+    {data.map((comment, index) => <div key={index}>
         <CommentCard className="px-2" data={comment}/>
-        {/* {showReplies && comment?.replies?.comments && 
-            <Comment className="px-4" data={comment?.replies?.comments}/>} */}
-    </>
+        </div>
     )}
     </>
 }

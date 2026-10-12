@@ -1,14 +1,68 @@
 import youtube from "../assets/images/youtube.png"
 import searchIcon from "../assets/images/search-icon.png"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appDataSlice";
+import { useEffect, useState } from "react";
+import { YOUTUBE_SEARCH_API } from "../utils/constants";
+import Suggestion from "./Suggestion";
+import { putInCache } from "../utils/searchSlice";
 
 const Header = () => {
     const dispatch = useDispatch();
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [suggestionList, setSuggestionList] = useState([]);
+    const [searchedString, setSearchedString] = useState("");
+    const cacheResults = useSelector((store) => store.search);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            fetchSuggestions()
+        }, 500)
+
+        //DEBOUNCING 
+        return () => {
+            clearTimeout(timer);
+        }
+    }, [searchedString])
 
     const handleToggleMenu = () => {
         dispatch(toggleMenu())
+    } 
+
+    const fetchSuggestions = async () => {
+        if(searchedString == ""){
+            setSuggestionList([]);
+            setShowSuggestions(false);
+            return;
+        }
+
+        if(cacheResults[searchedString]){
+            setSuggestionList(cacheResults[searchedString]);
+            return;
+        } 
+            
+        const response = await fetch(YOUTUBE_SEARCH_API + "&q=" + encodeURIComponent(searchedString));
+        const data = await response.json();
+        const rawSuggestionResponse = data?.items || [];
+        const filteredSuggestions = filterRelevantSuggestion(rawSuggestionResponse, searchedString);
+        setSuggestionList(filteredSuggestions);
+        const cacheObj = {
+            [searchedString] : filteredSuggestions
+        }
+        dispatch(putInCache(cacheObj));
     }
+
+    const filterRelevantSuggestion = (rawSuggestionResponse, searchedString) => {
+        return rawSuggestionResponse.filter(suggestionEle => suggestionEle?.snippet?.title.toLowerCase().startsWith(searchedString.toLowerCase())).map(
+            filteredSuggestionEle => {
+                const obj = {
+                    title: filteredSuggestionEle?.snippet?.title,
+                    id: filteredSuggestionEle?.id?.videoId
+                }
+                return obj;
+            });
+    }
+
     return <>
         <div className="flex justify-between px-3 py-1">
             <div className="flex w-1/12 justify-between">
@@ -21,7 +75,7 @@ const Header = () => {
                 <img className="w-20 cursor-pointer" alt="icon" src={youtube}></img>
             </div>
             <div className="flex py-1.5 w-9/12 justify-center">
-                <input className="border w-1/2 rounded-l-full" type="text"></input>
+                <input value={searchedString} onFocus={() => setShowSuggestions(true)} onBlur={() => setShowSuggestions(false)} onInput={(e) => setSearchedString(e.target.value)} className=" px-3 border w-1/2 rounded-l-full" type="text"></input>
                 <div className="flex justify-center items-center border rounded-r-full px-4 bg-slate-50 cursor-pointer hover:bg-gray-200">
                     <img className="w-6" alt="search-icon" src={searchIcon}></img>
                 </div>
@@ -51,9 +105,9 @@ const Header = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                     </svg>
                 </div>
-
             </div>
         </div>
+        {showSuggestions && suggestionList.length > 0 && <Suggestion data={suggestionList}/>}
     </>
 }
 export default Header;

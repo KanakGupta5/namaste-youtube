@@ -48,8 +48,8 @@ const WatchPage = () => {
     }
 
     return <>
-        <div className="px-3 py-1 flex">
-            <div className="flex flex-col gap-y-2">
+        <div className="px-3 py-1 flex gap-x-4">
+            <div className="flex flex-col gap-y-2 w-10/12">
                 <iframe className="rounded-lg" width="1100" height="550" src={"https://www.youtube.com/embed/" + videoId.get("v")} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
                 {commentData.length > 0 && <Comment data={commentData}/>}
             </div>
