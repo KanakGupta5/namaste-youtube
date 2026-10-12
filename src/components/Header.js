@@ -36,8 +36,8 @@ const Header = () => {
             return;
         }
 
-        if(cacheResults[searchedString]){
-            setSuggestionList(cacheResults[searchedString]);
+        if(cacheResults[searchedString.toUpperCase()]){
+            setSuggestionList(cacheResults[searchedString.toUpperCase()]);
             return;
         } 
             
@@ -47,13 +47,13 @@ const Header = () => {
         const filteredSuggestions = filterRelevantSuggestion(rawSuggestionResponse, searchedString);
         setSuggestionList(filteredSuggestions);
         const cacheObj = {
-            [searchedString] : filteredSuggestions
+            [searchedString.toUpperCase()] : filteredSuggestions
         }
         dispatch(putInCache(cacheObj));
     }
 
     const filterRelevantSuggestion = (rawSuggestionResponse, searchedString) => {
-        return rawSuggestionResponse.filter(suggestionEle => suggestionEle?.snippet?.title.toLowerCase().startsWith(searchedString.toLowerCase())).map(
+        const suggestions = rawSuggestionResponse.filter(suggestionEle => suggestionEle?.snippet?.title.toLowerCase().startsWith(searchedString.toLowerCase())).map(
             filteredSuggestionEle => {
                 const obj = {
                     title: filteredSuggestionEle?.snippet?.title,
@@ -61,6 +61,8 @@ const Header = () => {
                 }
                 return obj;
             });
+        const uniqueSuggestions = [...new Set(suggestions)];
+        return uniqueSuggestions;
     }
 
     return <>
@@ -75,7 +77,7 @@ const Header = () => {
                 <img className="w-20 cursor-pointer" alt="icon" src={youtube}></img>
             </div>
             <div className="flex py-1.5 w-9/12 justify-center">
-                <input value={searchedString} onFocus={() => setShowSuggestions(true)} onBlur={() => setShowSuggestions(false)} onInput={(e) => setSearchedString(e.target.value)} className=" px-3 border w-1/2 rounded-l-full" type="text"></input>
+                <input value={searchedString} onFocus={() => setShowSuggestions(true)} onInput={(e) => setSearchedString(e.target.value)} className=" px-3 border w-1/2 rounded-l-full" type="text"></input>
                 <div className="flex justify-center items-center border rounded-r-full px-4 bg-slate-50 cursor-pointer hover:bg-gray-200">
                     <img className="w-6" alt="search-icon" src={searchIcon}></img>
                 </div>
