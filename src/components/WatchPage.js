@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import RecommendedVideo from "./RecommendedVideo";
 import Comment from "./Comment";
 import { YOUTUBE_RECOMMENDATION_API, YOUTUBE_GET_METADATA_OF_VIDEO, YOUTUBE_GET_COMMENTS } from "../utils/constants"
+// import mockCommentData from "../mockData/nestedCommentData.json"
 
 const WatchPage = () => {
     const dispatch = useDispatch();
