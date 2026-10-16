@@ -77,7 +77,7 @@ const Header = () => {
                 <img className="w-20 cursor-pointer" alt="icon" src={youtube}></img>
             </div>
             <div className="flex py-1.5 w-9/12 justify-center">
-                <input value={searchedString} onFocus={() => setShowSuggestions(true)} onInput={(e) => setSearchedString(e.target.value)} className=" px-3 border w-1/2 rounded-l-full" type="text"></input>
+                <input value={searchedString} onBlur={() => setShowSuggestions(false)} onFocus={() => setShowSuggestions(true)} onInput={(e) => setSearchedString(e.target.value)} className=" px-3 border w-1/2 rounded-l-full" type="text"></input>
                 <div className="flex justify-center items-center border rounded-r-full px-4 bg-slate-50 cursor-pointer hover:bg-gray-200">
                     <img className="w-6" alt="search-icon" src={searchIcon}></img>
                 </div>
