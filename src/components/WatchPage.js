@@ -7,6 +7,8 @@ import Comment from "./Comment";
 import { YOUTUBE_RECOMMENDATION_API, YOUTUBE_GET_METADATA_OF_VIDEO, YOUTUBE_GET_COMMENTS, YOUTUBE_IS_LIVE_CHAT_ENABLED, YOUTUBE_LIVE_CHAT } from "../utils/constants"
 import LiveChat from "./LiveChat";
 import { addMessages } from "../utils/liveChatSlice";
+import CommentShimmer from "./CommentShimmer";
+import RecommendedVideoShimmer from "./RecommendedVideoShimmer";
 // import mockCommentData from "../mockData/nestedCommentData.json"
 
 const WatchPage = () => {
@@ -14,6 +16,7 @@ const WatchPage = () => {
     const [videoId] = useSearchParams();
     const [recommendedVideos, setRecommendedVideos] = useState([]);
     const [commentData, setCommentData] = useState([]);
+    const [isCommentsPresent, setIsCommentsPresent] = useState(true);
     const [isLiveStream, setIsLiveStream] = useState(false);
     // const [liveChatMessages, setLiveChatMessages] = useState([]); will not use state variable to store live messages because we dont want to bloat our state variable, we will use redux
 
@@ -36,10 +39,10 @@ const WatchPage = () => {
             const data = await response.json();
             if(data.error)
                 throw new Error("Error in fetchIsLiveChatEnabled()");
-            setIsLiveStream(true);
             const chatId = data?.items && data.items.length > 0 && data.items[0]?.liveStreamingDetails?.activeLiveChatId ? data.items[0]?.liveStreamingDetails?.activeLiveChatId : null;
             if(chatId == null)
                 return;
+            setIsLiveStream(true);
             await fetchLiveChat(chatId);
         }
         catch(error){
@@ -99,29 +102,42 @@ const WatchPage = () => {
                 throw new Error(data?.error?.message || "Failed to fetch comments. They are likely disabled");
             }            
             setCommentData(data?.items || []);
+            setIsCommentsPresent(true);
         }
         catch(error){
             console.warn(error);
+            setIsCommentsPresent(false);
         }
         
         
     }
 
-    return <>
-        <div className="px-3 py-1 flex gap-x-4">
-            <div className="flex flex-col gap-y-2 w-10/12">
-                <iframe className="rounded-lg" width="1100" height="550" src={"https://www.youtube.com/embed/" + videoId.get("v")} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                {commentData.length > 0 ? 
-                    <Comment data={commentData} /> 
-                    : <>Failed to fetch comments. They are likely disabled</>
-                    }
-            </div>
-            <div className="flex flex-col">
-                {isLiveStream && <LiveChat/>}
-                {recommendedVideos.length > 0 && <RecommendedVideo data={recommendedVideos} />}
-            </div>
-        </div>
-    </>
+    return <div className="px-3 py-1 grid grid-cols-[minmax(0,3fr)_minmax(350px,1fr)] gap-4">
+    <div className="flex flex-col gap-y-2 min-w-0">
+        <iframe
+            className="rounded-lg w-full aspect-video"
+            src={"https://www.youtube.com/embed/" + videoId.get("v")}
+            title="YouTube video player"
+            allowFullScreen
+        />
+
+        {isCommentsPresent
+            ? commentData.length > 0
+                ? <Comment data={commentData} />
+                : <CommentShimmer />
+            : <>Failed to fetch comments. They are likely disabled</>
+        }
+    </div>
+
+    <div className="flex flex-col min-w-0">
+        {isLiveStream && <LiveChat />}
+
+        {recommendedVideos.length > 0
+            ? <RecommendedVideo data={recommendedVideos} />
+            : <RecommendedVideoShimmer />
+        }
+    </div>
+</div>
 }
 
 export default WatchPage;

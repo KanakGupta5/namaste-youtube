@@ -9,5 +9,6 @@ export const YOUTUBE_IS_LIVE_CHAT_ENABLED = "https://www.googleapis.com/youtube/
 export const YOUTUBE_LIVE_CHAT = "https://www.googleapis.com/youtube/v3/liveChat/messages?part=snippet,authorDetails&key=" + YOUTUBE_API_KEY;
 export const YOUTUBE_FETCH_BY_VIDEO_CATEGORY_ID = "https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&chart=mostPopular&regionCode=IN&maxResults=20&key=" + YOUTUBE_API_KEY;
 export const OFFSET_LIVE_CHAT = 100;
+export const SHIMMER_COMPONENTS_LENGTH = 12;
 
 // &videoCategoryId=20
