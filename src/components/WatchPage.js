@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeMenu } from "../utils/appDataSlice";
 import { useSearchParams } from "react-router-dom";
 import RecommendedVideo from "./RecommendedVideo";
@@ -9,6 +9,8 @@ import LiveChat from "./LiveChat";
 import { addMessages } from "../utils/liveChatSlice";
 import CommentShimmer from "./CommentShimmer";
 import RecommendedVideoShimmer from "./RecommendedVideoShimmer";
+import { setOnlineStatus } from "../utils/appDataSlice";
+import Offline from "./Offline";
 // import mockCommentData from "../mockData/nestedCommentData.json"
 
 const WatchPage = () => {
@@ -18,34 +20,63 @@ const WatchPage = () => {
     const [commentData, setCommentData] = useState([]);
     const [isCommentsPresent, setIsCommentsPresent] = useState(true);
     const [isLiveStream, setIsLiveStream] = useState(false);
+    const [chatId, setChatId] = useState("");
+    const isOnline = useSelector((store) => store.app.isOnline);
     // const [liveChatMessages, setLiveChatMessages] = useState([]); will not use state variable to store live messages because we dont want to bloat our state variable, we will use redux
 
     useEffect(() => {
         dispatch(closeMenu());
+        const handleOnline = () => {
+            dispatch(setOnlineStatus(true));
+        };
+
+        const handleOffline = () => {
+            dispatch(setOnlineStatus(false));
+        };
+
+        window.addEventListener("online", handleOnline);
+        window.addEventListener("offline", handleOffline);
+
+        return () => {
+            window.removeEventListener("online", handleOnline);
+            window.removeEventListener("offline", handleOffline);
+        };
     }, [])
 
     useEffect(() => {
         fetchData();
         // API POLLING
-        const timer = setInterval(() => {
-            fetchIsLiveChatEnabled();
-        }, 3000)
-        return () => {clearInterval(timer)}
+        fetchIsLiveChatEnabled();
     }, [videoId.get("v")])
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            if (chatId != null && chatId != "")
+                fetchLiveChat(chatId);
+        }, 3000);
+
+        return () => {
+            clearInterval(timer);
+        }
+
+    }, [chatId]);
+
 
     const fetchIsLiveChatEnabled = async () => {
         try {
             const response = await fetch(YOUTUBE_IS_LIVE_CHAT_ENABLED + "&id=" + videoId.get("v"));
             const data = await response.json();
-            if(data.error)
+            if (data.error)
                 throw new Error("Error in fetchIsLiveChatEnabled()");
             const chatId = data?.items && data.items.length > 0 && data.items[0]?.liveStreamingDetails?.activeLiveChatId ? data.items[0]?.liveStreamingDetails?.activeLiveChatId : null;
-            if(chatId == null)
+            if (chatId == null) {
+                setChatId(null)
                 return;
+            }
             setIsLiveStream(true);
-            await fetchLiveChat(chatId);
+            setChatId(chatId);
         }
-        catch(error){
+        catch (error) {
             console.warn(error);
         }
     }
@@ -54,10 +85,10 @@ const WatchPage = () => {
         try {
             const response = await fetch(YOUTUBE_LIVE_CHAT + "&liveChatId=" + chatId);
             const data = await response.json();
-            if(data?.error)
+            if (data?.error)
                 throw new Error("Error in fetchLiveChat() with chatId", chatId);
             // setLiveChatMessages(data?.items || []);
-            if(data?.items && data.items.length){
+            if (data?.items && data.items.length) {
                 data.items.map(message => {
                     const obj = {
                         id: message?.id,
@@ -69,11 +100,11 @@ const WatchPage = () => {
                 })
             }
         }
-        catch(error){
+        catch (error) {
             console.warn(error);
         }
     }
-    
+
     const fetchData = async () => {
         const videoTitle = await fetchMetadata();
         if (!videoTitle) return;
@@ -100,44 +131,46 @@ const WatchPage = () => {
             const data = await response.json();
             if (data.error) {
                 throw new Error(data?.error?.message || "Failed to fetch comments. They are likely disabled");
-            }            
+            }
             setCommentData(data?.items || []);
             setIsCommentsPresent(true);
         }
-        catch(error){
+        catch (error) {
             console.warn(error);
             setIsCommentsPresent(false);
         }
-        
-        
+
+
     }
 
-    return <div className="px-3 py-1 grid grid-cols-[minmax(0,3fr)_minmax(350px,1fr)] gap-4">
-    <div className="flex flex-col gap-y-2 min-w-0">
-        <iframe
-            className="rounded-lg w-full aspect-video"
-            src={"https://www.youtube.com/embed/" + videoId.get("v")}
-            title="YouTube video player"
-            allowFullScreen
-        />
+    return (
+        isOnline ? (<div className="px-3 py-1 grid grid-cols-[minmax(0,3fr)_minmax(350px,1fr)] gap-4">
+            <div className="flex flex-col gap-y-2 min-w-0">
+                <iframe
+                    className="rounded-lg w-full aspect-video"
+                    src={"https://www.youtube.com/embed/" + videoId.get("v")}
+                    title="YouTube video player"
+                    allowFullScreen
+                />
 
-        {isCommentsPresent
-            ? commentData.length > 0
-                ? <Comment data={commentData} />
-                : <CommentShimmer />
-            : <>Failed to fetch comments. They are likely disabled</>
-        }
-    </div>
+                {isCommentsPresent
+                    ? commentData.length > 0
+                        ? <Comment data={commentData} />
+                        : <CommentShimmer />
+                    : <>Failed to fetch comments. They are likely disabled</>
+                }
+            </div>
 
-    <div className="flex flex-col min-w-0">
-        {isLiveStream && <LiveChat />}
+            <div className="flex flex-col min-w-0">
+                {isLiveStream && <LiveChat />}
 
-        {recommendedVideos.length > 0
-            ? <RecommendedVideo data={recommendedVideos} />
-            : <RecommendedVideoShimmer />
-        }
-    </div>
-</div>
+                {recommendedVideos.length > 0
+                    ? <RecommendedVideo data={recommendedVideos} />
+                    : <RecommendedVideoShimmer />
+                }
+            </div>
+        </div>) 
+        : (<div className="w-full flex justify-center items-center"><Offline /></div>));
 }
 
 export default WatchPage;
