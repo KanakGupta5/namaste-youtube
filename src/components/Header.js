@@ -73,7 +73,7 @@ const Header = () => {
     }
 
     return <>
-        <div className="flex justify-between px-3 py-1">
+        <div className="flex justify-between px-3 py-1 sticky top-0 bg-white">
             <div className="flex w-1/12 justify-between">
                 <div className="flex justify-center items-center cursor-pointer p-3 hover:border hover:bg-gray-200 hover:rounded-full" 
                      onClick={() => handleToggleMenu()}>
