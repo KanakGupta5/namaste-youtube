@@ -41,15 +41,22 @@ const Header = () => {
             return;
         } 
             
-        const response = await fetch(YOUTUBE_SEARCH_API + "&q=" + encodeURIComponent(searchedString));
-        const data = await response.json();
-        const rawSuggestionResponse = data?.items || [];
-        const filteredSuggestions = filterRelevantSuggestion(rawSuggestionResponse, searchedString);
-        setSuggestionList(filteredSuggestions);
-        const cacheObj = {
-            [searchedString.toUpperCase()] : filteredSuggestions
+        try {
+            const response = await fetch(YOUTUBE_SEARCH_API + "&q=" + encodeURIComponent(searchedString));
+            const data = await response.json();
+            if(data?.error)
+                throw new Error(data?.error || "Error in fetchSuggestions()");
+            const rawSuggestionResponse = data?.items || [];
+            const filteredSuggestions = filterRelevantSuggestion(rawSuggestionResponse, searchedString);
+            setSuggestionList(filteredSuggestions);
+            const cacheObj = {
+                [searchedString.toUpperCase()] : filteredSuggestions
+            }
+            dispatch(putInCache(cacheObj));
         }
-        dispatch(putInCache(cacheObj));
+        catch(error){
+            console.warn(error?.message || error);
+        }
     }
 
     const filterRelevantSuggestion = (rawSuggestionResponse, searchedString) => {

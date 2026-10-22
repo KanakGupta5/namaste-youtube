@@ -10,10 +10,17 @@ const ButtonList = () => {
     }, []);
 
     const fetchButtonListData = async () => {
-        const response = await fetch(YOUTUBE_CATEGORY_API)
-        const data = await response.json();
-        console.log("button list data",data);
-        setButtonListData(data?.items || []);
+        try {
+            const response = await fetch(YOUTUBE_CATEGORY_API)
+            const data = await response.json();
+            if(data?.error)
+                throw new Error(data?.error || "Error in fetchButtonListData()");
+            console.log("button list data",data);
+            setButtonListData(data?.items || []);
+        }
+        catch(error){
+            console.warn(error?.message || error);
+        }
     }
 
     return (
