@@ -3,7 +3,7 @@ import SidebarTile from "./SidebarTile";
 
 const Sidebar = () => {
     return <>
-        <div >
+        <div className="sticky top-16 h-screen overflow-y-auto bg-white">
             {
                 sidebarData.length > 0 && sidebarData.map((ele, index) => <SidebarTile key={index} data={ele} />)
             }
