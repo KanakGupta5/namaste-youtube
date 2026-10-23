@@ -5,7 +5,8 @@ const appDataSlice = createSlice({
     initialState: {
         isMenuOpen: true,
         isShowMenu: true,
-        isOnline: true
+        isOnline: true,
+        videoCategoryId: null
     },
     reducers: {
         toggleMenu: (state) => {
@@ -17,10 +18,13 @@ const appDataSlice = createSlice({
         },
         setOnlineStatus: (state, action) => {
             state.isOnline = action.payload
+        },
+        setVideoCategoryId: (state, action) => {
+            state.videoCategoryId = action.payload.videoCategoryId
         }
     }
 })
 
-export const {toggleMenu, closeMenu, setOnlineStatus} = appDataSlice.actions;
+export const {toggleMenu, closeMenu, setOnlineStatus, setVideoCategoryId} = appDataSlice.actions;
 
 export default appDataSlice.reducer;

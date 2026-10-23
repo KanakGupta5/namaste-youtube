@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ButtonList from "./ButtonList";
 import VideoContainer from "./VideoContainer";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +31,7 @@ const MainContainer = () => {
             {isOnline 
                 ? <>
                     <ButtonList />
-                    <VideoContainer />
+                    <VideoContainer/>
                 </>
             : <Offline/>}
         </div>

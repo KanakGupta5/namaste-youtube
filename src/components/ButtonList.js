@@ -15,7 +15,6 @@ const ButtonList = () => {
             const data = await response.json();
             if(data?.error)
                 throw new Error(data?.error || "Error in fetchButtonListData()");
-            console.log("button list data",data);
             setButtonListData(data?.items || []);
         }
         catch(error){

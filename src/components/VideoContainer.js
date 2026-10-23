@@ -3,6 +3,7 @@ import { YOUTUBE_VIDEO_API, OFFSET_YOUTUBE_VIDEO_API_CALLS } from "../utils/cons
 import VideoCard from "./VideoCard";
 import { Link } from "react-router-dom";
 import VideoContainerShimmer from "./VideoContainerShimmer";
+import { useSelector } from "react-redux";
 
 const VideoContainer = () => {
     const [videoData, setVideoData] = useState([]);
@@ -11,12 +12,13 @@ const VideoContainer = () => {
     const nextPageToken = useRef(null);
     const isFetching = useRef(false);
     let targetElement = useRef(null);
-    useEffect( () => {
-        fetchData();
-            const options = {
-            threshold: 0
-        }
+    const videoCategoryId = useSelector(store => store.app.videoCategoryId);
 
+    useEffect(() => {
+        setVideoData([]);
+        apiCallsCount.current = 0;
+        nextPageToken.current = null;
+        isFetching.current = false;
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if(entry.isIntersecting && apiCallsCount.current < OFFSET_YOUTUBE_VIDEO_API_CALLS)
@@ -24,7 +26,7 @@ const VideoContainer = () => {
                 else if(apiCallsCount.current >= OFFSET_YOUTUBE_VIDEO_API_CALLS)
                     console.log("Limit of inifinte scroll reached");
             })
-        }, options);
+        });
 
         targetElement.current = document.getElementById("target-element");
         
@@ -35,9 +37,11 @@ const VideoContainer = () => {
         return () => {
             observer.disconnect();
         }
-    }, [])
+    }, [videoCategoryId]);
 
-    
+    useEffect( () => {
+        fetchData();
+    }, [])    
 
     async function fetchData(){
         if(isFetching.current)
@@ -46,17 +50,18 @@ const VideoContainer = () => {
         try {
             isFetching.current = true;
             setIsVideoDataLoading(true);
-            const response = nextPageToken && nextPageToken.current ? await fetch(YOUTUBE_VIDEO_API + "&pageToken=" + nextPageToken.current) : await fetch(YOUTUBE_VIDEO_API);
+            const url = videoCategoryId != null ? YOUTUBE_VIDEO_API + "&videoCategoryId=" + videoCategoryId : YOUTUBE_VIDEO_API;
+            const response = nextPageToken && nextPageToken.current ? await fetch(url + "&pageToken=" + nextPageToken.current) : await fetch(url);
             const data = await response.json();
             if(data?.error)
-                throw new Error(data?.error || "Error in fetchData()");
+                throw new Error(data?.error?.message || "Error in fetchData()");
             setVideoData(prevData => [...prevData, ...data?.items]);
             nextPageToken.current = data?.nextPageToken;
             apiCallsCount.current = apiCallsCount.current + 1;
-            setIsVideoDataLoading(false);            
+            setIsVideoDataLoading(false);     
         }
         catch(error){
-            console.warn(error?.message || error);            
+            console.warn(error);          
         }
         finally{
             isFetching.current = false;
